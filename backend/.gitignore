@@ -1,0 +1,11 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/src/generated/prisma
+
+# Skills de agentes de IA geradas pelo prisma init (não fazem parte do app)
+/.agents/
+/.claude/
+/.windsurf/
+/skills-lock.json
