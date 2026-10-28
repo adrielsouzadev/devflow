@@ -1,0 +1,17 @@
+# Dependências
+node_modules/
+
+# Arquivos gerados pelo build
+dist/
+
+# Variáveis de ambiente (segredos)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Arquivos do sistema
+Thumbs.db
+.DS_Store
