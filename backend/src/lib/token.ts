@@ -19,3 +19,21 @@ export function signToken(userId: number): string {
     expiresIn: "1d",
   });
 }
+
+export function verifyToken(token: string): number {
+  const payload = jwt.verify(token, secret, {
+    algorithms: ["HS256"],
+  });
+
+  if (typeof payload === "string" || !payload.sub) {
+    throw new Error("Token sem identificação do usuário");
+  }
+
+  const userId = Number(payload.sub);
+
+  if (!Number.isInteger(userId)) {
+    throw new Error("Token com identificação inválida");
+  }
+
+  return userId;
+}
