@@ -1,4 +1,3 @@
-
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import { z } from "zod";
@@ -6,6 +5,7 @@ import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
 import { signToken } from "../lib/token.js";
 import { loginSchema, registerSchema } from "../schemas/auth.schemas.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const SALT_ROUNDS = 12;
 
@@ -75,4 +75,19 @@ authRouter.post("/login", async (req, res) => {
     token: signToken(user.id),
     user: { id: user.id, name: user.name, email: user.email },
   });
+});
+
+authRouter.get("/me", authenticate, async (req, res) => {
+  // authenticate garante que req.userId existe nesta rota.
+  const user = await prisma.user.findUnique({
+    where: { id: req.userId! },
+    select: { id: true, name: true, email: true, createdAt: true },
+  });
+
+  if (!user) {
+    res.status(401).json({ error: "Usuário não encontrado" });
+    return;
+  }
+
+  res.status(200).json(user);
 });
