@@ -34,8 +34,8 @@ export default function Home() {
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg text-slate-400">
-          Crie projetos, divida o trabalho em tarefas e acompanhe cada uma até
-          a conclusão, tudo em um só lugar.
+          Crie projetos, divida o trabalho em tarefas e acompanhe cada uma até a
+          conclusão, tudo em um só lugar.
         </p>
 
         <Link
