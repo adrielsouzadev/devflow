@@ -22,3 +22,11 @@ export function authenticate(
     res.status(401).json({ error: "Token inválido ou expirado" });
   }
 }
+
+export function getUserId(req: Request): number {
+  if (req.userId === undefined) {
+    throw new Error("getUserId usado em uma rota sem o middleware authenticate");
+  }
+
+  return req.userId;
+}
