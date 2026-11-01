@@ -15,3 +15,17 @@ export const createProjectSchema = z.object(
   },
   { error: "Envie um JSON com o nome e, opcionalmente, a descrição" },
 );
+
+export const updateProjectSchema = createProjectSchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    error: "Envie ao menos um campo para atualizar",
+  });
+
+export const projectIdParamSchema = z.object({
+  id: z.coerce
+    .number("Id inválido")
+    .int("Id inválido")
+    .positive("Id inválido")
+    .max(2_147_483_647, "Id inválido"),
+});
