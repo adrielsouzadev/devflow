@@ -1,11 +1,12 @@
+
 import bcrypt from "bcryptjs";
 import { Router } from "express";
-import { z } from "zod";
 import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
 import { signToken } from "../lib/token.js";
+import { parseOrReply } from "../lib/validation.js";
+import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import { loginSchema, registerSchema } from "../schemas/auth.schemas.js";
-import { authenticate } from "../middlewares/authenticate.js";
 
 const SALT_ROUNDS = 12;
 
@@ -16,22 +17,14 @@ const DUMMY_HASH = await bcrypt.hash("senha-ficticia", SALT_ROUNDS);
 export const authRouter = Router();
 
 authRouter.post("/register", async (req, res) => {
-  const parsed = registerSchema.safeParse(req.body);
+  const data = parseOrReply(res, registerSchema, req.body);
+  if (!data) return;
 
-  if (!parsed.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(parsed.error),
-    });
-    return;
-  }
-
-  const { name, email, password } = parsed.data;
-  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+  const passwordHash = await bcrypt.hash(data.password, SALT_ROUNDS);
 
   try {
     const user = await prisma.user.create({
-      data: { name, email, passwordHash },
+      data: { name: data.name, email: data.email, passwordHash },
       select: { id: true, name: true, email: true, createdAt: true },
     });
     res.status(201).json(user);
@@ -48,21 +41,12 @@ authRouter.post("/register", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-  const parsed = loginSchema.safeParse(req.body);
+  const data = parseOrReply(res, loginSchema, req.body);
+  if (!data) return;
 
-  if (!parsed.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(parsed.error),
-    });
-    return;
-  }
-
-  const { email, password } = parsed.data;
-
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { email: data.email } });
   const passwordMatches = await bcrypt.compare(
-    password,
+    data.password,
     user?.passwordHash ?? DUMMY_HASH,
   );
 
@@ -78,9 +62,8 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.get("/me", authenticate, async (req, res) => {
-  // authenticate garante que req.userId existe nesta rota.
   const user = await prisma.user.findUnique({
-    where: { id: req.userId! },
+    where: { id: getUserId(req) },
     select: { id: true, name: true, email: true, createdAt: true },
   });
 
