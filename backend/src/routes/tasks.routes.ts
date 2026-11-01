@@ -1,15 +1,21 @@
 import { Router } from "express";
+import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
 import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import {
   createTaskSchema,
   projectTasksParamSchema,
+  taskIdParamSchema,
+  updateTaskSchema,
 } from "../schemas/tasks.schemas.js";
 
-export const projectTasksRouter = Router({ mergeParams: true });
-
-projectTasksRouter.use(authenticate);
+function isRecordNotFound(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2025"
+  );
+}
 
 async function userOwnsProject(
   projectId: number,
@@ -22,6 +28,11 @@ async function userOwnsProject(
 
   return project !== null;
 }
+
+// Rotas aninhadas: /projects/:projectId/tasks
+export const projectTasksRouter = Router({ mergeParams: true });
+
+projectTasksRouter.use(authenticate);
 
 projectTasksRouter.post("/", async (req, res) => {
   const params = parseOrReply(res, projectTasksParamSchema, req.params);
@@ -57,4 +68,53 @@ projectTasksRouter.get("/", async (req, res) => {
   });
 
   res.status(200).json(tasks);
+});
+
+// Rotas por id de tarefa: /tasks/:id
+export const tasksRouter = Router();
+
+tasksRouter.use(authenticate);
+
+tasksRouter.patch("/:id", async (req, res) => {
+  const params = parseOrReply(res, taskIdParamSchema, req.params);
+  if (!params) return;
+
+  const data = parseOrReply(res, updateTaskSchema, req.body);
+  if (!data) return;
+
+  try {
+    const task = await prisma.task.update({
+      where: { id: params.id, project: { userId: getUserId(req) } },
+      data,
+    });
+
+    res.status(200).json(task);
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      res.status(404).json({ error: "Tarefa não encontrada" });
+      return;
+    }
+
+    throw error;
+  }
+});
+
+tasksRouter.delete("/:id", async (req, res) => {
+  const params = parseOrReply(res, taskIdParamSchema, req.params);
+  if (!params) return;
+
+  try {
+    await prisma.task.delete({
+      where: { id: params.id, project: { userId: getUserId(req) } },
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      res.status(404).json({ error: "Tarefa não encontrada" });
+      return;
+    }
+
+    throw error;
+  }
 });
