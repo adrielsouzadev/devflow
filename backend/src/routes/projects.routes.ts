@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { z } from "zod";
 import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
+import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import {
   createProjectSchema,
@@ -21,18 +21,11 @@ function isRecordNotFound(error: unknown): boolean {
 }
 
 projectsRouter.post("/", async (req, res) => {
-  const parsed = createProjectSchema.safeParse(req.body);
-
-  if (!parsed.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(parsed.error),
-    });
-    return;
-  }
+  const data = parseOrReply(res, createProjectSchema, req.body);
+  if (!data) return;
 
   const project = await prisma.project.create({
-    data: { ...parsed.data, userId: getUserId(req) },
+    data: { ...data, userId: getUserId(req) },
   });
 
   res.status(201).json(project);
@@ -48,30 +41,16 @@ projectsRouter.get("/", async (req, res) => {
 });
 
 projectsRouter.patch("/:id", async (req, res) => {
-  const params = projectIdParamSchema.safeParse(req.params);
+  const params = parseOrReply(res, projectIdParamSchema, req.params);
+  if (!params) return;
 
-  if (!params.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(params.error),
-    });
-    return;
-  }
-
-  const body = updateProjectSchema.safeParse(req.body);
-
-  if (!body.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(body.error),
-    });
-    return;
-  }
+  const data = parseOrReply(res, updateProjectSchema, req.body);
+  if (!data) return;
 
   try {
     const project = await prisma.project.update({
-      where: { id: params.data.id, userId: getUserId(req) },
-      data: body.data,
+      where: { id: params.id, userId: getUserId(req) },
+      data,
     });
     res.status(200).json(project);
   } catch (error) {
@@ -84,19 +63,12 @@ projectsRouter.patch("/:id", async (req, res) => {
 });
 
 projectsRouter.delete("/:id", async (req, res) => {
-  const params = projectIdParamSchema.safeParse(req.params);
-
-  if (!params.success) {
-    res.status(400).json({
-      error: "Dados inválidos",
-      details: z.flattenError(params.error),
-    });
-    return;
-  }
+  const params = parseOrReply(res, projectIdParamSchema, req.params);
+  if (!params) return;
 
   try {
     await prisma.project.delete({
-      where: { id: params.data.id, userId: getUserId(req) },
+      where: { id: params.id, userId: getUserId(req) },
     });
     res.status(204).send();
   } catch (error) {
