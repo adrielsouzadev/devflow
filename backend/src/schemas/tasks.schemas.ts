@@ -59,3 +59,7 @@ export const updateTaskSchema = z
   .refine((data) => Object.keys(data).length > 0, {
     error: "Envie ao menos um campo para atualizar",
   });
+
+export const listTasksQuerySchema = z.object({
+  status: statusField.optional(),
+});
