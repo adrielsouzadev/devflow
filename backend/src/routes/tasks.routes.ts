@@ -5,6 +5,7 @@ import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import {
   createTaskSchema,
+  listTasksQuerySchema,
   projectTasksParamSchema,
   taskIdParamSchema,
   updateTaskSchema,
@@ -57,13 +58,16 @@ projectTasksRouter.get("/", async (req, res) => {
   const params = parseOrReply(res, projectTasksParamSchema, req.params);
   if (!params) return;
 
+  const query = parseOrReply(res, listTasksQuerySchema, req.query);
+  if (!query) return;
+
   if (!(await userOwnsProject(params.projectId, getUserId(req)))) {
     res.status(404).json({ error: "Projeto não encontrado" });
     return;
   }
 
   const tasks = await prisma.task.findMany({
-    where: { projectId: params.projectId },
+    where: { projectId: params.projectId, status: query.status },
     orderBy: { createdAt: "desc" },
   });
 
