@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
+import { isRecordNotFound } from "../lib/prismaErrors.js";
 import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import {
@@ -10,13 +10,6 @@ import {
   taskIdParamSchema,
   updateTaskSchema,
 } from "../schemas/tasks.schemas.js";
-
-function isRecordNotFound(error: unknown): boolean {
-  return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2025"
-  );
-}
 
 async function userOwnsProject(
   projectId: number,

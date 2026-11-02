@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idField } from "./common.schemas.js";
 
 export const createProjectSchema = z.object(
   {
@@ -22,10 +23,4 @@ export const updateProjectSchema = createProjectSchema
     error: "Envie ao menos um campo para atualizar",
   });
 
-export const projectIdParamSchema = z.object({
-  id: z.coerce
-    .number("Id inválido")
-    .int("Id inválido")
-    .positive("Id inválido")
-    .max(2_147_483_647, "Id inválido"),
-});
+export const projectIdParamSchema = z.object({ id: idField });

@@ -1,6 +1,7 @@
+
 import { Router } from "express";
-import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/prisma.js";
+import { isRecordNotFound } from "../lib/prismaErrors.js";
 import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
 import {
@@ -12,13 +13,6 @@ import {
 export const projectsRouter = Router();
 
 projectsRouter.use(authenticate);
-
-function isRecordNotFound(error: unknown): boolean {
-  return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2025"
-  );
-}
 
 projectsRouter.post("/", async (req, res) => {
   const data = parseOrReply(res, createProjectSchema, req.body);
