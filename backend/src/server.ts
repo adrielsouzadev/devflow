@@ -1,3 +1,5 @@
+import "dotenv/config";
+import cors from "cors";
 import express from "express";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import { authRouter } from "./routes/auth.routes.js";
@@ -6,9 +8,11 @@ import { projectTasksRouter, tasksRouter } from "./routes/tasks.routes.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 
 app.disable("x-powered-by");
 
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
