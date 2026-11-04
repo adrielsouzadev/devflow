@@ -11,6 +11,14 @@ export type ApiResponse<T> = {
   data: T | null;
 };
 
+export type ApiErrorBody = {
+  error: string;
+  details?: {
+    formErrors: string[];
+    fieldErrors: Record<string, string[] | undefined>;
+  };
+};
+
 function readApiUrl(): string {
   const value = process.env.API_URL;
 
