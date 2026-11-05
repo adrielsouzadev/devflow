@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { apiFetch, type ApiErrorBody } from "@/lib/api";
 import type { AuthFormState } from "@/lib/form-state";
-import { setSession } from "@/lib/session";
+import { deleteSession, setSession } from "@/lib/session";
 
 type LoginResponse = {
   token: string;
@@ -84,5 +84,10 @@ export async function register(
     redirect("/projects");
   }
 
+  redirect("/login");
+}
+
+export async function logout(): Promise<void> {
+  await deleteSession();
   redirect("/login");
 }

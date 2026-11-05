@@ -1,13 +1,13 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { SESSION_COOKIE_NAME } from "./session-cookie";
 
-const COOKIE_NAME = "devflow_session";
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
 
 export async function setSession(token: string): Promise<void> {
   const cookieStore = await cookies();
 
-  cookieStore.set(COOKIE_NAME, token, {
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -19,11 +19,11 @@ export async function setSession(token: string): Promise<void> {
 export async function getSession(): Promise<string | undefined> {
   const cookieStore = await cookies();
 
-  return cookieStore.get(COOKIE_NAME)?.value;
+  return cookieStore.get(SESSION_COOKIE_NAME)?.value;
 }
 
 export async function deleteSession(): Promise<void> {
   const cookieStore = await cookies();
 
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(SESSION_COOKIE_NAME);
 }
