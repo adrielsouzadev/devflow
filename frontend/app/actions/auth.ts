@@ -55,3 +55,34 @@ export async function login(
 
   return buildErrorState(status, data as ApiErrorBody | null, { email });
 }
+
+export async function register(
+  _prevState: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const name = String(formData.get("name") ?? "");
+  const email = String(formData.get("email") ?? "");
+  const password = String(formData.get("password") ?? "");
+
+  const { status, data } = await apiFetch<ApiErrorBody>("/auth/register", {
+    method: "POST",
+    body: { name, email, password },
+  });
+
+  if (status !== 201) {
+    return buildErrorState(status, data, { name, email });
+  }
+
+  // Cadastro feito: entra direto, sem pedir o login de novo.
+  const login = await apiFetch<LoginResponse>("/auth/login", {
+    method: "POST",
+    body: { email, password },
+  });
+
+  if (login.status === 200 && login.data) {
+    await setSession(login.data.token);
+    redirect("/projects");
+  }
+
+  redirect("/login");
+}
