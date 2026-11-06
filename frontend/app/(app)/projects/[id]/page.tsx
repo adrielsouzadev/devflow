@@ -7,6 +7,8 @@ import type { Project, Task } from "@/lib/types";
 import { TaskForm } from "./task-form";
 import { TaskItem } from "./task-item";
 import { TaskFilters } from "./task-filters";
+import { ProjectEditForm } from "./project-edit-form";
+import { ProjectDeleteButton } from "./project-delete-button";
 
 type ProjectPageProps = {
   params: Promise<{ id: string }>;
@@ -71,6 +73,12 @@ async function ProjectContent({
         <p className="mt-4 text-xs text-slate-500">
           Criado em {formatDate(project.createdAt)}
         </p>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <ProjectEditForm project={project} />
+          <ProjectDeleteButton projectId={id} />
+        </div>
+
       </header>
 
       <section className="mt-12 rounded-xl border border-slate-800 bg-slate-900/50 p-6">
