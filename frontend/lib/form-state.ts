@@ -6,3 +6,8 @@ export type AuthFormState = {
     email?: string;
   };
 };
+
+export type FormState = {
+  error?: string;
+  fieldErrors?: Record<string, string[] | undefined>;
+};
