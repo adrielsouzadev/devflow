@@ -34,6 +34,25 @@ projectsRouter.get("/", async (req, res) => {
   res.status(200).json(projects);
 });
 
+projectsRouter.get("/:id", async (req, res) => {
+  const params = parseOrReply(res, projectIdParamSchema, req.params);
+  if (!params) return;
+
+  const project = await prisma.project.findFirst({
+    where: {
+      id: params.id,
+      userId: getUserId(req),
+    },
+  });
+
+  if (!project) {
+    res.status(404).json({ error: "Projeto não encontrado" });
+    return;
+  }
+
+  res.status(200).json(project);
+});
+
 projectsRouter.patch("/:id", async (req, res) => {
   const params = parseOrReply(res, projectIdParamSchema, req.params);
   if (!params) return;
