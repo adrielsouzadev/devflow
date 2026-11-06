@@ -6,12 +6,20 @@ import { formatDate } from "@/lib/format";
 import type { Project, Task } from "@/lib/types";
 import { TaskForm } from "./task-form";
 import { TaskItem } from "./task-item";
+import { TaskFilters } from "./task-filters";
 
 type ProjectPageProps = {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ status?: string }>;
 };
 
-async function ProjectContent({ id }: { id: number }) {
+async function ProjectContent({
+  id,
+  status,
+}: {
+  id: number;
+  status?: string;
+}) {
   const projectResponse = await authFetch<Project>(
     `/projects/${id}`,
   );
@@ -26,9 +34,11 @@ async function ProjectContent({ id }: { id: number }) {
 
   const project = projectResponse.data;
 
-  const tasksResponse = await authFetch<Task[]>(
-    `/projects/${id}/tasks`,
-  );
+  const tasksUrl = status
+    ? `/projects/${id}/tasks?status=${status}`
+    : `/projects/${id}/tasks`;
+
+  const tasksResponse = await authFetch<Task[]>(tasksUrl);
 
   if (tasksResponse.status !== 200 || !tasksResponse.data) {
     throw new Error("Não foi possível carregar as tarefas.");
@@ -83,6 +93,10 @@ async function ProjectContent({ id }: { id: number }) {
           </span>
         </div>
 
+        <div className="mb-6">
+          <TaskFilters />
+        </div>
+
         {tasks.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/50 px-6 py-16 text-center">
             <h3 className="text-xl font-semibold text-indigo-300">
@@ -111,18 +125,31 @@ async function ProjectContent({ id }: { id: number }) {
 
 async function ProjectPageContent({
   params,
+  searchParams,
 }: ProjectPageProps) {
-  const { id: rawId } = await params;
+  const [{ id: rawId }, { status: rawStatus }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+
   const id = Number(rawId);
 
   if (!Number.isSafeInteger(id) || id <= 0) {
     notFound();
   }
 
-  return <ProjectContent id={id} />;
+  const validStatuses = ["TODO", "IN_PROGRESS", "DONE"];
+  const status = validStatuses.includes(rawStatus ?? "")
+    ? rawStatus
+    : undefined;
+
+  return <ProjectContent id={id} status={status} />;
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage({
+  params,
+  searchParams,
+  }: ProjectPageProps) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <div
@@ -137,7 +164,10 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           </main>
         }
       >
-        <ProjectPageContent params={params} />
+        <ProjectPageContent
+          params={params}
+          searchParams={searchParams}
+        />
       </Suspense>
     </div>
   );
