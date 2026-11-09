@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { getCurrentUser } from "@/lib/current-user";
 import { logout } from "@/app/actions/auth";
+import { AppFooter } from "@/components/app-footer";
 
 export const instant = false;
 
@@ -104,6 +105,10 @@ export default async function Home() {
           ))}
         </ul>
       </main>
+
+      <div className="relative">
+        <AppFooter />
+      </div>
     </div>
   );
 }
