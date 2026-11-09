@@ -42,11 +42,11 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
     <form action={formAction} className="mt-6 max-w-2xl space-y-4">
       <FormField
         label="Nome do projeto"
-        htmlFor="name"
+        htmlFor="edit-project-name"
         error={state.fieldErrors?.name?.[0]}
       >
         <input
-          id="name"
+          id="edit-project-name"
           name="name"
           type="text"
           required
@@ -58,11 +58,11 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
 
       <FormField
         label="Descrição"
-        htmlFor="description"
+        htmlFor="edit-project-description"
         error={state.fieldErrors?.description?.[0]}
       >
         <textarea
-          id="description"
+          id="edit-project-description"
           name="description"
           rows={3}
           maxLength={1000}

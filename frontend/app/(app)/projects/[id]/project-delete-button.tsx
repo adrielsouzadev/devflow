@@ -25,7 +25,7 @@ export function ProjectDeleteButton({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="mt-5 rounded-md border border-red-500/50 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+        className="mt-5 rounded-md border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/20 hover:text-red-300"
       >
         Excluir projeto
       </button>

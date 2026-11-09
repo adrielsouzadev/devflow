@@ -26,8 +26,9 @@ export function TaskFilters() {
     }
 
     const query = params.toString();
+
     router.replace(query ? `${pathname}?${query}` : pathname, {
-        scroll: false,
+      scroll: false,
     });
   }
 
@@ -41,6 +42,7 @@ export function TaskFilters() {
             key={filter.value}
             type="button"
             onClick={() => handleFilter(filter.value)}
+            aria-pressed={isActive}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               isActive
                 ? "bg-indigo-600 text-white"

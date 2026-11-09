@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { getSession } from "@/lib/session";
+import { getCurrentUser } from "@/lib/current-user";
+import { logout } from "@/app/actions/auth";
+
+export const instant = false;
 
 const features = [
   {
@@ -15,7 +20,10 @@ const features = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const token = await getSession();
+  const user = token ? await getCurrentUser() : null;
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <div
@@ -23,7 +31,42 @@ export default function Home() {
         className="pointer-events-none absolute -top-40 left-1/2 size-112 -translate-x-1/2 rounded-full bg-indigo-600/30 blur-3xl"
       />
 
-      <main className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-6 py-16 text-center">
+      <header className="relative z-10 mx-auto flex max-w-5xl items-center justify-end gap-3 px-6 pt-6">
+        {token ? (
+          <>
+            <span className="text-sm text-slate-400">
+              Olá, {user?.name}
+            </span>
+
+            <form action={logout}>
+              <button
+                type="submit"
+                className="rounded-lg border border-slate-700 px-3 py-1.5 text-sm font-medium text-slate-200 transition hover:border-indigo-400 hover:text-indigo-300"
+              >
+                Sair
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            >
+              Entrar
+            </Link>
+
+            <Link
+              href="/register"
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+            >
+              Criar conta
+            </Link>
+          </>
+        )}
+      </header>
+
+      <main className="relative mx-auto flex min-h-[calc(100vh-72px)] max-w-5xl flex-col items-center justify-center px-6 py-16 text-center">
         <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1 text-sm font-medium text-indigo-300">
           Gestão de projetos e tarefas
         </span>
@@ -51,7 +94,9 @@ export default function Home() {
               key={feature.title}
               className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 text-left"
             >
-              <h2 className="font-semibold text-indigo-300">{feature.title}</h2>
+              <h2 className="font-semibold text-indigo-300">
+                {feature.title}
+              </h2>
               <p className="mt-2 text-sm text-slate-400">
                 {feature.description}
               </p>

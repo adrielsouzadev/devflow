@@ -22,12 +22,6 @@ async function ProjectsContent() {
       />
 
       <main className="relative mx-auto min-h-screen max-w-5xl px-6 py-16">
-        <Link
-          href="/"
-          className="text-sm font-medium text-indigo-300 transition hover:text-indigo-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
-        >
-          ← Voltar para o início
-        </Link>
 
         <header className="mt-8">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
@@ -75,7 +69,7 @@ async function ProjectsContent() {
                   href={`/projects/${project.id}`}
                   className="rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-indigo-500/60 hover:bg-slate-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-400"
                 >
-                  <h3 className="break-all text-lg font-semibold text-slate-100">
+                  <h3 className="wrap-break-word text-lg font-semibold text-slate-100">
                     {project.name}
                   </h3>
 
