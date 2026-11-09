@@ -5,8 +5,13 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-100">
       <div className="w-full max-w-sm">
+        <Link
+          href="/"
+          className="mb-8 inline-block text-lg font-bold tracking-tight"
+        >
+          Dev<span className="text-indigo-400">Flow</span>
+        </Link>
         <h1 className="text-3xl font-bold tracking-tight">Entrar</h1>
-
         <p className="mt-2 text-slate-400">
           Acesse sua conta para ver seus projetos.
         </p>

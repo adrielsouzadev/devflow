@@ -81,7 +81,7 @@ export function RegisterForm() {
           autoComplete="new-password"
           className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none focus:border-indigo-400"
         />
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-400">
           Use ao menos 8 caracteres.
         </p>
         {state.fieldErrors?.password && (
