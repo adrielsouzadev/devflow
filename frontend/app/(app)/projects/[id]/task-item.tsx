@@ -183,7 +183,7 @@ export function TaskItem({ projectId, task }: TaskItemProps) {
           <div className="flex flex-wrap items-center gap-3">
             <ConfirmSubmitButton
               pendingText="Salvando..."
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Salvar alterações
             </ConfirmSubmitButton>
