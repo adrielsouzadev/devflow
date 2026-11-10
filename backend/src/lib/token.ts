@@ -8,6 +8,12 @@ function readSecret(): string {
     throw new Error("JWT_SECRET não está definida no arquivo .env");
   }
 
+  if (value.length < 32) {
+    throw new Error(
+      "JWT_SECRET deve possuir pelo menos 32 caracteres",
+    );
+  }
+
   return value;
 }
 
