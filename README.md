@@ -38,7 +38,53 @@ Aplicação full-stack para gerenciamento de projetos e tarefas, desenvolvida co
 | Back-end | Node.js, Express 5, TypeScript, Zod |
 | Banco de dados | PostgreSQL, Prisma 7 |
 | Autenticação | JWT (HS256), bcryptjs |
+| Testes | Vitest, Supertest |
 | Ferramentas | Git, GitHub, npm |
+
+## Testes automatizados
+
+O back-end possui testes automatizados desenvolvidos com **Vitest** e **Supertest**, cobrindo:
+
+- Health check da API.
+- Cadastro e autenticação de usuários.
+- Validação de dados e tratamento de erros.
+- Proteção de rotas e autenticação JWT.
+- Isolamento de dados entre usuários.
+- Operações CRUD de projetos e tarefas.
+- Controle de acesso a recursos de outros usuários.
+
+Todos os testes passam na versão atual do projeto.
+
+Para executar os testes localmente:
+
+```bash
+cd backend
+npm install
+npm test
+```
+
+Para executar os testes em modo de desenvolvimento:
+
+```bash
+npm run test:watch
+```
+
+Para configurar o ambiente de testes:
+
+1. Crie um banco PostgreSQL chamado `devflow_test`.
+2. Crie o arquivo `backend/.env.test` com a variável `DATABASE_URL` apontando para esse banco:
+
+   ```env
+   DATABASE_URL="postgresql://USUARIO:SENHA@localhost:5432/devflow_test"
+   ```
+
+3. Aplique as migrações nesse banco:
+
+   ```bash
+   DOTENV_CONFIG_PATH=.env.test npx prisma migrate deploy --config prisma7.config.ts
+   ```
+
+4. Mantenha também o `backend/.env` configurado, pois o `JWT_SECRET` vem dele.
 
 ## Arquitetura
 
@@ -148,7 +194,11 @@ cd frontend
 npm install
 ```
 
-Crie o arquivo `.env.local` com base no `.env.example` e configure as variáveis necessárias.
+Crie o arquivo `.env.local` com base no `.env.example`:
+
+```env
+API_URL="http://localhost:3001"
+```
 
 Inicie o servidor:
 
@@ -160,7 +210,7 @@ O front-end estará disponível em:
 
 `http://localhost:3000`
 
-> Os arquivos `.env` e `.env.local` contêm configurações locais e segredos. Não devem ser enviados ao GitHub.
+> Os arquivos `.env`, `.env.test` e `.env.local` contêm configurações locais e segredos. Não devem ser enviados ao GitHub.
 
 ## Decisões de design
 
