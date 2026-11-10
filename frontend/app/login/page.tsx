@@ -7,7 +7,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <Link
           href="/"
-          className="mb-8 inline-block text-lg font-bold tracking-tight"
+          className="mb-8 inline-block text-xl font-bold tracking-tight"
         >
           Dev<span className="text-indigo-400">Flow</span>
         </Link>
