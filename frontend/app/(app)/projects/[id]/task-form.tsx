@@ -5,10 +5,7 @@ import { createTask } from "@/app/actions/tasks";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 import { FormError, FormField, inputClass } from "@/components/form-ui";
 import type { FormState } from "@/lib/form-state";
-import {
-  PRIORITIES,
-  PRIORITY_LABELS,
-} from "@/lib/types";
+import { PRIORITIES, PRIORITY_LABELS } from "@/lib/types";
 
 const initialState: FormState = {};
 
@@ -87,7 +84,7 @@ export function TaskForm({ projectId }: TaskFormProps) {
           <input
             id="new-task-dueDate"
             name="dueDate"
-            type="datetime-local"
+            type="date"
             className={inputClass}
           />
         </FormField>

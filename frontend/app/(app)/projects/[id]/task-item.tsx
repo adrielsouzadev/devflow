@@ -1,11 +1,10 @@
-
 "use client";
 
 import { useActionState } from "react";
 import { deleteTask, updateTask } from "@/app/actions/tasks";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 import { FormError, FormField } from "@/components/form-ui";
-import { formatDateTime, toDateTimeLocal } from "@/lib/format";
+import { formatDateOnly, toDateInput } from "@/lib/format";
 import type { FormState } from "@/lib/form-state";
 import {
   PRIORITIES,
@@ -83,7 +82,7 @@ export function TaskItem({ projectId, task }: TaskItemProps) {
 
       {task.dueDate && (
         <p className="mb-5 text-xs text-slate-400">
-          Prazo: {formatDateTime(task.dueDate)}
+          Prazo: {formatDateOnly(task.dueDate)}
         </p>
       )}
 
@@ -172,8 +171,8 @@ export function TaskItem({ projectId, task }: TaskItemProps) {
             <input
               id={`dueDate-${task.id}`}
               name="dueDate"
-              type="datetime-local"
-              defaultValue={toDateTimeLocal(task.dueDate)}
+              type="date"
+              defaultValue={toDateInput(task.dueDate)}
               className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-indigo-500"
             />
           </FormField>

@@ -25,7 +25,9 @@ export async function createTask(
         title,
         ...(description.trim() ? { description } : {}),
         priority,
-        ...(dueDate ? { dueDate: new Date(dueDate).toISOString() } : {}),
+        ...(dueDate
+          ? { dueDate: `${dueDate}T00:00:00.000Z` }
+          : {}),
       },
     },
   );
@@ -59,7 +61,7 @@ export async function updateTask(
       description: description.trim() ? description : null,
       priority,
       status,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      dueDate: dueDate ? `${dueDate}T00:00:00.000Z` : null,
     },
   });
 

@@ -29,7 +29,23 @@ export function formatDateTime(value: string | null): string {
   }).format(date);
 }
 
-export function toDateTimeLocal(value: string | null): string {
+export function formatDateOnly(value: string | null): string {
+  if (!value) {
+    return "Sem data";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Data inválida";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+  }).format(date);
+}
+
+export function toDateInput(value: string | null): string {
   if (!value) {
     return "";
   }
@@ -40,7 +56,5 @@ export function toDateTimeLocal(value: string | null): string {
     return "";
   }
 
-  const offset = date.getTimezoneOffset() * 60_000;
-
-  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+  return date.toISOString().slice(0, 10);
 }
