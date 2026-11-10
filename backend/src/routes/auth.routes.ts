@@ -1,4 +1,3 @@
-
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import { Prisma } from "../generated/prisma/client.js";
@@ -6,6 +5,10 @@ import { prisma } from "../lib/prisma.js";
 import { signToken } from "../lib/token.js";
 import { parseOrReply } from "../lib/validation.js";
 import { authenticate, getUserId } from "../middlewares/authenticate.js";
+import {
+  loginRateLimiter,
+  registerRateLimiter,
+} from "../middlewares/authRateLimit.js";
 import { loginSchema, registerSchema } from "../schemas/auth.schemas.js";
 
 const SALT_ROUNDS = 12;
@@ -16,7 +19,7 @@ const DUMMY_HASH = await bcrypt.hash("senha-ficticia", SALT_ROUNDS);
 
 export const authRouter = Router();
 
-authRouter.post("/register", async (req, res) => {
+authRouter.post("/register", registerRateLimiter, async (req, res) => {
   const data = parseOrReply(res, registerSchema, req.body);
   if (!data) return;
 
@@ -40,7 +43,7 @@ authRouter.post("/register", async (req, res) => {
   }
 });
 
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/login", loginRateLimiter, async (req, res) => {
   const data = parseOrReply(res, loginSchema, req.body);
   if (!data) return;
 
