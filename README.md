@@ -1,5 +1,7 @@
 # DevFlow
 
+**Aplicação online:** [Acessar DevFlow](https://devflow-six-eta.vercel.app/)
+
 Aplicação full-stack para gerenciamento de projetos e tarefas, desenvolvida com TypeScript. Cada usuário possui sua própria conta e acessa exclusivamente seus próprios dados.
 
 ## Funcionalidades
@@ -19,15 +21,19 @@ Aplicação full-stack para gerenciamento de projetos e tarefas, desenvolvida co
 ## Capturas de tela
 
 ### Página inicial
+
 ![Página inicial do DevFlow](screenshots/inicio.png)
 
 ### Cadastro
+
 ![Tela de cadastro](screenshots/cadastro.png)
 
 ### Projetos
+
 ![Página de projetos](screenshots/projetos.png)
 
 ### Gerenciamento de tarefas
+
 ![Página de tarefas](screenshots/tarefas.png)
 
 ## Tecnologias
@@ -40,6 +46,18 @@ Aplicação full-stack para gerenciamento de projetos e tarefas, desenvolvida co
 | Autenticação | JWT (HS256), bcryptjs |
 | Testes | Vitest, Supertest |
 | Ferramentas | Git, GitHub, npm |
+
+## Hospedagem
+
+O projeto está publicado utilizando serviços de hospedagem independentes:
+
+- **Front-end:** [Vercel](https://vercel.com/)
+- **Back-end:** [Render](https://render.com/)
+- **Banco de dados:** [Neon](https://neon.com/)
+
+A aplicação está disponível em:
+
+**[https://devflow-six-eta.vercel.app/](https://devflow-six-eta.vercel.app/)**
 
 ## Testes automatizados
 
@@ -69,7 +87,7 @@ Para executar os testes em modo de desenvolvimento:
 npm run test:watch
 ```
 
-Para configurar o ambiente de testes:
+### Configuração do ambiente de testes
 
 1. Crie um banco PostgreSQL chamado `devflow_test`.
 2. Crie o arquivo `backend/.env.test` com a variável `DATABASE_URL` apontando para esse banco:
