@@ -243,4 +243,4 @@ O front-end estará disponível em:
 
 Desenvolvido por **Adriel Souza**.
 
-- GitHub: [@adrielsouzadev](https://github.com/adrielsouzadev)
+[GitHub](https://github.com/adrielsouzadev) · [LinkedIn](https://linkedin.com/in/adriel-souza-dev)
